@@ -51,6 +51,7 @@ public class ServiceController {
     service.setTitle(serviceDetails.getTitle());
     service.setPrice(serviceDetails.getPrice());
     service.setOrders(serviceDetails.getOrders());
+
     Service updatedService = servicesRepository.save(service);
     return updatedService;
   }

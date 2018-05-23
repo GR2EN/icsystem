@@ -1,8 +1,7 @@
 package net.gr2en.icsystem.model;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -35,12 +35,22 @@ public class Computer {
       joinColumns = @JoinColumn(name = "computer_id"),
       inverseJoinColumns = @JoinColumn(name = "software_id")
   )
-  private Set<Software> software = new HashSet<>();
+  private List<Software> software;
 
-  public Computer(Integer id, String status, Date lastMaintenance) {
+  @OneToMany(mappedBy = "computer")
+  private List<Order> orders;
+
+  public Computer() {
+
+  }
+
+  public Computer(Integer id, String status, Date lastMaintenance, List<Software> software,
+      List<Order> orders) {
     this.id = id;
     this.status = status;
     this.lastMaintenance = lastMaintenance;
+    this.software = software;
+    this.orders = orders;
   }
 
   public Integer getId() {
@@ -67,11 +77,19 @@ public class Computer {
     this.lastMaintenance = lastMaintenance;
   }
 
-  public Set<Software> getSoftware() {
+  public List<Software> getSoftware() {
     return software;
   }
 
-  public void setSoftware(Set<Software> software) {
+  public void setSoftware(List<Software> software) {
     this.software = software;
+  }
+
+  public List<Order> getOrders() {
+    return orders;
+  }
+
+  public void setOrders(List<Order> orders) {
+    this.orders = orders;
   }
 }

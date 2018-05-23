@@ -1,7 +1,6 @@
 package net.gr2en.icsystem.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,7 +19,11 @@ public class Software {
   private String title;
 
   @ManyToMany(mappedBy = "software")
-  private Set<Computer> computers = new HashSet<>();
+  private List<Computer> computers;
+
+  public Software() {
+
+  }
 
   public Software(Integer id, String title) {
     this.id = id;
@@ -43,11 +46,11 @@ public class Software {
     this.title = title;
   }
 
-  public Set<Computer> getComputers() {
+  public List<Computer> getComputers() {
     return computers;
   }
 
-  public void setComputers(Set<Computer> computers) {
+  public void setComputers(List<Computer> computers) {
     this.computers = computers;
   }
 }

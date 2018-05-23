@@ -54,6 +54,8 @@ public class ComputerController {
     computer.setStatus(computerDetails.getStatus());
     computer.setLastMaintenance(computerDetails.getLastMaintenance());
     computer.setSoftware(computerDetails.getSoftware());
+    computer.setOrders(computerDetails.getOrders());
+
     Computer updatedComputer = repository.save(computer);
     return updatedComputer;
   }

@@ -1,12 +1,11 @@
 package net.gr2en.icsystem.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -21,13 +20,18 @@ public class Service {
 
   private Double price;
 
-  @ManyToMany(mappedBy = "services")
-  private Set<Order> orders = new HashSet<>();
+  @OneToMany(mappedBy = "service")
+  private List<Order> orders;
 
-  public Service(Integer id, String title, Double price) {
+  public Service() {
+
+  }
+
+  public Service(Integer id, String title, Double price, List<Order> orders) {
     this.id = id;
     this.title = title;
     this.price = price;
+    this.orders = orders;
   }
 
   public Integer getId() {
@@ -54,11 +58,11 @@ public class Service {
     this.price = price;
   }
 
-  public Set<Order> getOrders() {
+  public List<Order> getOrders() {
     return orders;
   }
 
-  public void setOrders(Set<Order> orders) {
+  public void setOrders(List<Order> orders) {
     this.orders = orders;
   }
 }

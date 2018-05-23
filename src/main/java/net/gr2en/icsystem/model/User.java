@@ -1,7 +1,6 @@
 package net.gr2en.icsystem.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
@@ -36,15 +36,30 @@ public class User {
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id")
   )
-  private Set<Role> roles = new HashSet<>();
+  private List<Role> roles;
+
+  @OneToMany(mappedBy = "user")
+  private List<Order> orders;
+
+  public User() {
+
+  }
+
+  public User(Integer id, @NotBlank String email, @NotBlank String passwordHash) {
+    this.id = id;
+    this.email = email;
+    this.passwordHash = passwordHash;
+  }
 
   public User(Integer id, String firstName, String lastName,
-      @NotBlank String email, @NotBlank String passwordHash) {
+      @NotBlank String email, @NotBlank String passwordHash,
+      List<Order> orders) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.passwordHash = passwordHash;
+    this.orders = orders;
   }
 
   public Integer getId() {
@@ -87,11 +102,19 @@ public class User {
     this.passwordHash = passwordHash;
   }
 
-  public Set<Role> getRoles() {
+  public List<Role> getRoles() {
     return roles;
   }
 
-  public void setRoles(Set<Role> roles) {
+  public void setRoles(List<Role> roles) {
     this.roles = roles;
+  }
+
+  public List<Order> getOrders() {
+    return orders;
+  }
+
+  public void setOrders(List<Order> orders) {
+    this.orders = orders;
   }
 }

@@ -53,6 +53,7 @@ public class UserController {
     user.setEmail(userDetails.getEmail());
     user.setPasswordHash(userDetails.getPasswordHash());
     user.setRoles(userDetails.getRoles());
+    user.setOrders(userDetails.getOrders());
 
     User updatedUser = repository.save(user);
     return updatedUser;

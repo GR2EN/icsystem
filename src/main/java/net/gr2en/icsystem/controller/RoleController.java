@@ -49,6 +49,7 @@ public class RoleController {
         .orElseThrow(() -> new ResourceNotFoundException("Role", "id", roleId));
 
     role.setTitle(roleDetails.getTitle());
+    role.setUsers(roleDetails.getUsers());
     Role updatedRole = repository.save(role);
     return updatedRole;
   }

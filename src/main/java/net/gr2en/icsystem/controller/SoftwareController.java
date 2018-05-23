@@ -49,6 +49,7 @@ public class SoftwareController {
         .orElseThrow(() -> new ResourceNotFoundException("Software", "id", softwareId));
 
     software.setTitle(softwareDetails.getTitle());
+    software.setComputers(softwareDetails.getComputers());
     Software updatedSoftware = softwareRepository.save(software);
     return updatedSoftware;
   }

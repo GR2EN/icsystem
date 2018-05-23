@@ -1,7 +1,6 @@
 package net.gr2en.icsystem.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,11 +19,16 @@ public class Role {
   private String title;
 
   @ManyToMany(mappedBy = "roles")
-  private Set<User> users = new HashSet<>();
+  private List<User> users;
 
-  public Role(Integer id, String title) {
+  public Role() {
+
+  }
+
+  public Role(Integer id, String title, List<User> users) {
     this.id = id;
     this.title = title;
+    this.users = users;
   }
 
   public Integer getId() {
@@ -41,5 +45,13 @@ public class Role {
 
   public void setTitle(String title) {
     this.title = title;
+  }
+
+  public List<User> getUsers() {
+    return users;
+  }
+
+  public void setUsers(List<User> users) {
+    this.users = users;
   }
 }
