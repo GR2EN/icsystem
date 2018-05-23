@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "orders")
@@ -17,18 +18,22 @@ public class Order {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
+  @NotBlank
   @ManyToOne
   @JoinColumn(name = "user_id")
   private User user;
 
+  @NotBlank
   @ManyToOne
   @JoinColumn(name = "computer_id")
   private Computer computer;
 
+  @NotBlank
   @ManyToOne
   @JoinColumn(name = "service_id")
   private Service service;
 
+  @NotBlank
   private int numberOfHours;
 
   private Date date;
