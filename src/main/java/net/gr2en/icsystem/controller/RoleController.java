@@ -23,7 +23,7 @@ public class RoleController {
   RolesRepository repository;
 
   /* get roles list */
-  @GetMapping("/")
+  @GetMapping("/list")
   public List<Role> getRoles() {
     return repository.findAll();
   }
@@ -36,8 +36,8 @@ public class RoleController {
   }
 
   /* add new role */
-  @PostMapping("/")
-  public Role newRole(@Valid @RequestBody Role role) {
+  @PostMapping("/new")
+  public Role addNewRole(@Valid @RequestBody Role role) {
     return repository.save(role);
   }
 
@@ -55,7 +55,7 @@ public class RoleController {
   }
 
   /* delete role by id */
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/delete/{id}")
   public boolean delete(@PathVariable(value = "id") Integer roleId) {
     Role role = repository.findById(roleId)
         .orElseThrow(() -> new ResourceNotFoundException("Role", "id", roleId));

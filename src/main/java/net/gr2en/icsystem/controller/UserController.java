@@ -23,7 +23,7 @@ public class UserController {
   UsersRepository repository;
 
   /* get users list */
-  @GetMapping("/")
+  @GetMapping("/list")
   public List<User> getUsers() {
     return repository.findAll();
   }
@@ -36,13 +36,13 @@ public class UserController {
   }
 
   /* add new user */
-  @PostMapping("/")
-  public User newUser(@Valid @RequestBody User user) {
+  @PostMapping("/new")
+  public User addNewUser(@Valid @RequestBody User user) {
     return repository.save(user);
   }
 
   /* update user by id */
-  @PutMapping("/{id}")
+  @PutMapping("/update/{id}")
   public User update(@PathVariable(value = "id") Integer userId,
       @Valid @RequestBody User userDetails) {
     User user = repository.findById(userId)
@@ -60,7 +60,7 @@ public class UserController {
   }
 
   /* delete user by id */
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/delete/{id}")
   public boolean delete(@PathVariable(value = "id") Integer userId) {
     User user = repository.findById(userId)
         .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));

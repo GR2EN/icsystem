@@ -1,5 +1,7 @@
 package net.gr2en.icsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,6 +32,7 @@ public class User {
   @NotBlank
   private String passwordHash;
 
+  @JsonManagedReference
   @ManyToMany
   @JoinTable(
       name = "user_roles",
@@ -38,6 +41,7 @@ public class User {
   )
   private List<Role> roles;
 
+  @JsonBackReference
   @OneToMany(mappedBy = "user")
   private List<Order> orders;
 

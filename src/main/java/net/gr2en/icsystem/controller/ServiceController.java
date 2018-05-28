@@ -23,8 +23,8 @@ public class ServiceController {
   ServicesRepository servicesRepository;
 
   /* get services list */
-  @GetMapping("/")
-  public List<Service> getAllServices() {
+  @GetMapping("/list")
+  public List<Service> getServices() {
     return servicesRepository.findAll();
   }
 
@@ -36,13 +36,13 @@ public class ServiceController {
   }
 
   /* add new service */
-  @PostMapping("/")
-  public Service newService(@Valid @RequestBody Service service) {
+  @PostMapping("/new")
+  public Service addNewService(@Valid @RequestBody Service service) {
     return servicesRepository.save(service);
   }
 
   /* update service by id */
-  @PutMapping("/{id}")
+  @PutMapping("/update/{id}")
   public Service update(@PathVariable(value = "id") Integer serviceId,
       @Valid @RequestBody Service serviceDetails) {
     Service service = servicesRepository.findById(serviceId)
@@ -57,7 +57,7 @@ public class ServiceController {
   }
 
   /* delete service by id */
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/delete/{id}")
   public boolean delete(@PathVariable(value = "id") Integer serviceId) {
     Service service = servicesRepository.findById(serviceId)
         .orElseThrow(() -> new ResourceNotFoundException("Service", "id", serviceId));

@@ -38,13 +38,13 @@ CREATE TABLE IF NOT EXISTS `software` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `computer_software` (
-  `computers_id` int(11) NOT NULL,
+  `computer_id` int(11) NOT NULL,
   `software_id` int(11) NOT NULL,
-  PRIMARY KEY (`computers_id`,`software_id`),
+  PRIMARY KEY (`computer_id`,`software_id`),
   KEY `software_id` (`software_id`),
-  CONSTRAINT `computers_software_fk_1`
-   FOREIGN KEY (`computers_id`) REFERENCES `computers` (`id`),
-  CONSTRAINT `computers_software_fk_2`
+  CONSTRAINT `computer_software_fk_1`
+   FOREIGN KEY (`computer_id`) REFERENCES `computers` (`id`),
+  CONSTRAINT `computer_software_fk_2`
    FOREIGN KEY (`software_id`) REFERENCES `software` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `user_id` int(11) NOT NULL,
   `computer_id` int(11) NOT NULL,
   `service_id` int(11) NOT NULL,
-  `number_of_hours` int(11) NOT NULL,
+  `hours` int(11) NOT NULL,
   `date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),

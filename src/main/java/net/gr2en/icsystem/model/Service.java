@@ -1,5 +1,6 @@
 package net.gr2en.icsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,6 +21,7 @@ public class Service {
 
   private Double price;
 
+  @JsonBackReference
   @OneToMany(mappedBy = "service")
   private List<Order> orders;
 

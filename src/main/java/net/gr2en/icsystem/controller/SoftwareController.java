@@ -23,8 +23,8 @@ public class SoftwareController {
   SoftwareRepository softwareRepository;
 
   /* get software list */
-  @GetMapping("/")
-  public List<Software> getAllSoftware() {
+  @GetMapping("/list")
+  public List<Software> getSoftware() {
     return softwareRepository.findAll();
   }
 
@@ -36,13 +36,13 @@ public class SoftwareController {
   }
 
   /* add new software */
-  @PostMapping("/")
-  public Software newSoftware(@Valid @RequestBody Software software) {
+  @PostMapping("/new")
+  public Software addNewSoftware(@Valid @RequestBody Software software) {
     return softwareRepository.save(software);
   }
 
   /* update software by id */
-  @PutMapping("/{id}")
+  @PutMapping("/update/{id}")
   public Software update(@PathVariable(value = "id") Integer softwareId,
       @Valid @RequestBody Software softwareDetails) {
     Software software = softwareRepository.findById(softwareId)
@@ -55,7 +55,7 @@ public class SoftwareController {
   }
 
   /* delete software by id */
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/delete/{id}")
   public boolean delete(@PathVariable(value = "id") Integer softwareId) {
     Software software = softwareRepository.findById(softwareId)
         .orElseThrow(() -> new ResourceNotFoundException("Software", "id", softwareId));

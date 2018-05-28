@@ -26,8 +26,8 @@ public class ComputerController {
   ComputerRepository repository;
 
   /* get computers list */
-  @GetMapping("/")
-  public List<Computer> getAllComputers() {
+  @GetMapping("/list")
+  public List<Computer> getComputers() {
     return repository.findAll();
   }
 
@@ -39,13 +39,13 @@ public class ComputerController {
   }
 
   /* add new computer */
-  @PostMapping("/")
-  public Computer newComputer(@Valid @RequestBody Computer computer) {
+  @PostMapping("/new")
+  public Computer addNewComputer(@Valid @RequestBody Computer computer) {
     return repository.save(computer);
   }
 
   /* update computer by id */
-  @PutMapping("/{id}")
+  @PutMapping("/update/{id}")
   public Computer update(@PathVariable(value = "id") Integer computerId,
       @Valid @RequestBody Computer computerDetails) {
     Computer computer = repository.findById(computerId)
@@ -61,7 +61,7 @@ public class ComputerController {
   }
 
   /* delete computer by id */
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/delete/{id}")
   public boolean delete(@PathVariable(value = "id") Integer computerId) {
     Computer computer = repository.findById(computerId)
         .orElseThrow(() -> new ResourceNotFoundException("Computer", "id", computerId));

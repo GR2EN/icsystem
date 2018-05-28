@@ -1,5 +1,6 @@
 package net.gr2en.icsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,22 +20,25 @@ public class Order {
   private Integer id;
 
   @NotBlank
+  @JsonManagedReference
   @ManyToOne
   @JoinColumn(name = "user_id")
   private User user;
 
   @NotBlank
+  @JsonManagedReference
   @ManyToOne
   @JoinColumn(name = "computer_id")
   private Computer computer;
 
   @NotBlank
+  @JsonManagedReference
   @ManyToOne
   @JoinColumn(name = "service_id")
   private Service service;
 
   @NotBlank
-  private int numberOfHours;
+  private int hours;
 
   private Date date;
 
@@ -42,13 +46,13 @@ public class Order {
 
   }
 
-  public Order(Integer id, User user, Computer computer, Service service, int numberOfHours,
+  public Order(Integer id, User user, Computer computer, Service service, int hours,
       Date date) {
     this.id = id;
     this.user = user;
     this.computer = computer;
     this.service = service;
-    this.numberOfHours = numberOfHours;
+    this.hours = hours;
     this.date = date;
   }
 
@@ -84,12 +88,12 @@ public class Order {
     this.service = service;
   }
 
-  public int getNumberOfHours() {
-    return numberOfHours;
+  public int getHours() {
+    return hours;
   }
 
-  public void setNumberOfHours(int numberOfHours) {
-    this.numberOfHours = numberOfHours;
+  public void setHours(int hours) {
+    this.hours = hours;
   }
 
   public Date getDate() {
