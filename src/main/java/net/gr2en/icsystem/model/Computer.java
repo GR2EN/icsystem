@@ -1,7 +1,6 @@
 package net.gr2en.icsystem.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
@@ -15,7 +14,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "computers")
@@ -27,11 +25,9 @@ public class Computer {
 
   private String status;
 
-  @Temporal(TemporalType.TIMESTAMP)
-  @DateTimeFormat(pattern = "dd.MM.yyyy")
+  @Temporal(TemporalType.DATE)
   private Date lastMaintenance;
 
-  @JsonManagedReference
   @ManyToMany
   @JoinTable(
       name = "computer_software",
@@ -40,15 +36,13 @@ public class Computer {
   )
   private List<Software> software;
 
-  @JsonBackReference
   @OneToMany(mappedBy = "computer")
   private List<Order> orders;
 
-  public Computer() {
+  public Computer() { } // JPA only
 
-  }
-
-  public Computer(Integer id, String status, Date lastMaintenance, List<Software> software,
+  public Computer(Integer id, String status, Date lastMaintenance,
+      List<Software> software,
       List<Order> orders) {
     this.id = id;
     this.status = status;
@@ -89,6 +83,7 @@ public class Computer {
     this.software = software;
   }
 
+  @JsonIgnore
   public List<Order> getOrders() {
     return orders;
   }

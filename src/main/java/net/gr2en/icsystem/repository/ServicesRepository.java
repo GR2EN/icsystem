@@ -8,7 +8,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ServicesRepository extends JpaRepository<Service, Integer> {
+
   List<Service> findByPriceGreaterThanEqual(double priceValue);
+
   List<Service> findByPriceLessThanEqual(double priceValue);
+
   List<Service> findByPriceEquals(double priceValue);
+
 }

@@ -1,6 +1,7 @@
 package net.gr2en.icsystem.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.List;
 import javax.persistence.Entity;
@@ -32,7 +33,6 @@ public class User {
   @NotBlank
   private String passwordHash;
 
-  @JsonManagedReference
   @ManyToMany
   @JoinTable(
       name = "user_roles",
@@ -41,13 +41,10 @@ public class User {
   )
   private List<Role> roles;
 
-  @JsonBackReference
   @OneToMany(mappedBy = "user")
   private List<Order> orders;
 
-  public User() {
-
-  }
+  public User() { } // JPA only
 
   public User(Integer id, @NotBlank String email, @NotBlank String passwordHash) {
     this.id = id;
@@ -114,6 +111,7 @@ public class User {
     this.roles = roles;
   }
 
+  @JsonIgnore
   public List<Order> getOrders() {
     return orders;
   }

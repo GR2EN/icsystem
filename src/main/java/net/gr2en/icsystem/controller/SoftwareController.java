@@ -1,11 +1,16 @@
 package net.gr2en.icsystem.controller;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import javax.validation.Valid;
+import net.gr2en.icsystem.exception.ResourceAlreadyExistException;
 import net.gr2en.icsystem.exception.ResourceNotFoundException;
 import net.gr2en.icsystem.model.Software;
-import net.gr2en.icsystem.repository.SoftwareRepository;
+import net.gr2en.icsystem.service.SoftwareService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,52 +21,52 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/software")
+@RequestMapping("/software")
 public class SoftwareController {
 
   @Autowired
-  SoftwareRepository softwareRepository;
+  private SoftwareService softwareService;
 
-  /* get software list */
-  @GetMapping("/list")
-  public List<Software> getSoftware() {
-    return softwareRepository.findAll();
+  @GetMapping
+  public ResponseEntity<List<Software>> getSoftware() {
+    List<Software> software = softwareService.getAllSoftware();
+    return ResponseEntity.ok(software);
   }
 
-  /* get software by id */
-  @GetMapping("/{id}")
-  public Software getSoftwareById(@PathVariable(value = "id") Integer softwareId) {
-    return softwareRepository.findById(softwareId)
-        .orElseThrow(() -> new ResourceNotFoundException("Software", "id", softwareId));
+  @GetMapping("/{software_id}")
+  public ResponseEntity<Software> getSoftwareById(@PathVariable(value = "software_id") Integer softwareId) {
+    try {
+      Software software = softwareService.getSoftwareById(softwareId);
+      return ResponseEntity.ok(software);
+    } catch (ResourceNotFoundException ex) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
   }
 
-  /* add new software */
-  @PostMapping("/new")
-  public Software addNewSoftware(@Valid @RequestBody Software software) {
-    return softwareRepository.save(software);
+  @PostMapping
+  public ResponseEntity<Void> addSoftware(@Valid @RequestBody Software software)
+      throws URISyntaxException {
+    try {
+      Software newSoftware = softwareService.add(software);
+      return ResponseEntity.created(new URI("/software/" + newSoftware.getId())).build();
+    } catch (ResourceAlreadyExistException ex) {
+      return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
   }
 
-  /* update software by id */
-  @PutMapping("/update/{id}")
-  public Software update(@PathVariable(value = "id") Integer softwareId,
-      @Valid @RequestBody Software softwareDetails) {
-    Software software = softwareRepository.findById(softwareId)
-        .orElseThrow(() -> new ResourceNotFoundException("Software", "id", softwareId));
-
-    software.setTitle(softwareDetails.getTitle());
-    software.setComputers(softwareDetails.getComputers());
-    Software updatedSoftware = softwareRepository.save(software);
-    return updatedSoftware;
+  @PutMapping("/{software_id}")
+  public Software update(@PathVariable(value = "software_id") Integer softwareId,
+      @Valid @RequestBody Software details) {
+    return softwareService.edit(softwareId, details);
   }
 
-  /* delete software by id */
-  @DeleteMapping("/delete/{id}")
-  public boolean delete(@PathVariable(value = "id") Integer softwareId) {
-    Software software = softwareRepository.findById(softwareId)
-        .orElseThrow(() -> new ResourceNotFoundException("Software", "id", softwareId));
-
-    softwareRepository.delete(software);
-
-    return true;
+  @DeleteMapping("/{software_id}")
+  public ResponseEntity<Void> delete(@PathVariable(value = "software_id") Integer softwareId) {
+    try {
+      softwareService.delete(softwareId);
+      return ResponseEntity.noContent().build();
+    } catch (ResourceNotFoundException ex) {
+      return ResponseEntity.notFound().build();
+    }
   }
 }

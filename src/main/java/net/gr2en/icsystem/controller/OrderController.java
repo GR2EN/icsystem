@@ -31,7 +31,7 @@ public class OrderController {
   @GetMapping("{id}")
   public Order getOrderById(@PathVariable(value = "id") Integer id) {
     return repository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Order", "id", id));
+        .orElseThrow(() -> new ResourceNotFoundException("Order " + id + " not found."));
   }
 
   /* add new order */
@@ -44,7 +44,7 @@ public class OrderController {
   @DeleteMapping("/delete/{id}")
   public boolean deleteOrder(@PathVariable(value = "id") Integer id) {
     Order order = repository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Order", "id", id));
+        .orElseThrow(() -> new ResourceNotFoundException("Order " + id + " not found."));
 
     repository.delete(order);
     return true;

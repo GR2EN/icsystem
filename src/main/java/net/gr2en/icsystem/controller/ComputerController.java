@@ -1,11 +1,16 @@
 package net.gr2en.icsystem.controller;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import javax.validation.Valid;
+import net.gr2en.icsystem.exception.ResourceAlreadyExistException;
 import net.gr2en.icsystem.exception.ResourceNotFoundException;
 import net.gr2en.icsystem.model.Computer;
-import net.gr2en.icsystem.repository.ComputerRepository;
+import net.gr2en.icsystem.service.ComputerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,69 +21,62 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/computers")
+@RequestMapping("/computers")
 public class ComputerController {
 
-  private final String FREE_STATUS = "free";
-  private final String BUSY_STATUS = "busy";
-
   @Autowired
-  ComputerRepository repository;
+  private ComputerService computerService;
 
-  /* get computers list */
-  @GetMapping("/list")
-  public List<Computer> getComputers() {
-    return repository.findAll();
+  @GetMapping
+  public ResponseEntity<List<Computer>> getComputers() {
+    List<Computer> computers =  computerService.getAllComputers();
+    return ResponseEntity.ok(computers);
   }
 
-  /* get computer by id */
-  @GetMapping("/{id}")
-  public Computer getComputerById(@PathVariable(value = "id") Integer computerId) {
-    return repository.findById(computerId)
-        .orElseThrow(() -> new ResourceNotFoundException("Computer", "id", computerId));
+  @GetMapping("/{computer_id}")
+  public ResponseEntity<Computer> getComputerById(@PathVariable(value = "computer_id") Integer computerId) {
+    try {
+      Computer computer = computerService.getComputerById(computerId);
+      return ResponseEntity.ok(computer);
+    } catch (ResourceNotFoundException ex) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
   }
 
-  /* add new computer */
-  @PostMapping("/new")
-  public Computer addNewComputer(@Valid @RequestBody Computer computer) {
-    return repository.save(computer);
+  @PostMapping
+  public ResponseEntity<Void> addComputer(@Valid @RequestBody Computer computer) throws URISyntaxException {
+    try {
+      Computer newComputer = computerService.add(computer);
+      return ResponseEntity.created(new URI("/computers/" + newComputer.getId())).build();
+    } catch (ResourceAlreadyExistException ex) {
+      return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    }
   }
 
-  /* update computer by id */
-  @PutMapping("/update/{id}")
-  public Computer update(@PathVariable(value = "id") Integer computerId,
-      @Valid @RequestBody Computer computerDetails) {
-    Computer computer = repository.findById(computerId)
-        .orElseThrow(() -> new ResourceNotFoundException("Computer", "id", computerId));
-
-    computer.setStatus(computerDetails.getStatus());
-    computer.setLastMaintenance(computerDetails.getLastMaintenance());
-    computer.setSoftware(computerDetails.getSoftware());
-    computer.setOrders(computerDetails.getOrders());
-
-    Computer updatedComputer = repository.save(computer);
-    return updatedComputer;
+  @PutMapping("/{computer_id}")
+  public Computer edit(@PathVariable(name = "computer_id") Integer computerId,
+      @Valid @RequestBody Computer details) {
+    return computerService.edit(computerId, details);
   }
 
-  /* delete computer by id */
-  @DeleteMapping("/delete/{id}")
-  public boolean delete(@PathVariable(value = "id") Integer computerId) {
-    Computer computer = repository.findById(computerId)
-        .orElseThrow(() -> new ResourceNotFoundException("Computer", "id", computerId));
-
-    repository.delete(computer);
-    return true;
+  @DeleteMapping("/{computer_id}")
+  public ResponseEntity<Void> delete(@PathVariable(value = "computer_id") Integer computerId) {
+    try {
+      computerService.delete(computerId);
+      return ResponseEntity.noContent().build();
+    } catch (ResourceNotFoundException ex) {
+      return ResponseEntity.notFound().build();
+    }
   }
 
-  /* get free computers */
   @PostMapping("/free")
   public List<Computer> getFreeComputers() {
-    return repository.findByStatus(FREE_STATUS);
+    return computerService.getFreeComputers();
   }
 
-  /* get busy computers */
   @PostMapping("/busy")
   public List<Computer> getBusyComputers() {
-    return repository.findByStatus(BUSY_STATUS);
+    return computerService.getBusyComputers();
   }
+
 }

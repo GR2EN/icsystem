@@ -1,50 +1,49 @@
 package net.gr2en.icsystem.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "orders")
+@EntityListeners(AuditingEntityListener.class)
 public class Order {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @NotBlank
-  @JsonManagedReference
   @ManyToOne
   @JoinColumn(name = "user_id")
   private User user;
 
-  @NotBlank
-  @JsonManagedReference
   @ManyToOne
   @JoinColumn(name = "computer_id")
   private Computer computer;
 
-  @NotBlank
-  @JsonManagedReference
   @ManyToOne
   @JoinColumn(name = "service_id")
   private Service service;
 
-  @NotBlank
   private int hours;
 
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "date")
+  @CreatedDate
   private Date date;
 
-  public Order() {
-
-  }
+  public Order() { }  // JPA only
 
   public Order(Integer id, User user, Computer computer, Service service, int hours,
       Date date) {

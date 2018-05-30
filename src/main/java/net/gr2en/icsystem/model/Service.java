@@ -1,6 +1,7 @@
 package net.gr2en.icsystem.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,13 +22,10 @@ public class Service {
 
   private Double price;
 
-  @JsonBackReference
   @OneToMany(mappedBy = "service")
   private List<Order> orders;
 
-  public Service() {
-
-  }
+  public Service() { }  // JPA only
 
   public Service(Integer id, String title, Double price, List<Order> orders) {
     this.id = id;
@@ -60,6 +58,7 @@ public class Service {
     this.price = price;
   }
 
+  @JsonIgnore
   public List<Order> getOrders() {
     return orders;
   }

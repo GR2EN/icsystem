@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface ComputerRepository extends JpaRepository<Computer, Integer> {
 
   List<Computer> findByStatus(String status);
+
 }

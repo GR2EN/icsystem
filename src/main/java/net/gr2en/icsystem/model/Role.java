@@ -1,6 +1,7 @@
 package net.gr2en.icsystem.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,13 +20,10 @@ public class Role {
 
   private String title;
 
-  @JsonBackReference
   @ManyToMany(mappedBy = "roles")
   private List<User> users;
 
-  public Role() {
-
-  }
+  public Role() { } // JPA only
 
   public Role(Integer id, String title, List<User> users) {
     this.id = id;
@@ -49,6 +47,7 @@ public class Role {
     this.title = title;
   }
 
+  @JsonIgnore
   public List<User> getUsers() {
     return users;
   }

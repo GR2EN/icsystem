@@ -32,7 +32,7 @@ public class ServiceController {
   @GetMapping("/{id}")
   public Service getServiceById(@PathVariable(value = "id") Integer serviceId) {
     return servicesRepository.findById(serviceId)
-        .orElseThrow(() -> new ResourceNotFoundException("Service", "id", serviceId));
+        .orElseThrow(() -> new ResourceNotFoundException("Service " + serviceId + " not found."));
   }
 
   /* add new service */
@@ -41,12 +41,12 @@ public class ServiceController {
     return servicesRepository.save(service);
   }
 
-  /* update service by id */
+  /* edit service by id */
   @PutMapping("/update/{id}")
   public Service update(@PathVariable(value = "id") Integer serviceId,
       @Valid @RequestBody Service serviceDetails) {
     Service service = servicesRepository.findById(serviceId)
-        .orElseThrow(() -> new ResourceNotFoundException("Service", "id", serviceId));
+        .orElseThrow(() -> new ResourceNotFoundException("Service " + serviceId + " not found."));
 
     service.setTitle(serviceDetails.getTitle());
     service.setPrice(serviceDetails.getPrice());
@@ -60,7 +60,7 @@ public class ServiceController {
   @DeleteMapping("/delete/{id}")
   public boolean delete(@PathVariable(value = "id") Integer serviceId) {
     Service service = servicesRepository.findById(serviceId)
-        .orElseThrow(() -> new ResourceNotFoundException("Service", "id", serviceId));
+        .orElseThrow(() -> new ResourceNotFoundException("Service " + serviceId + " not found."));
     servicesRepository.delete(service);
     return true;
   }
